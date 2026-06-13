@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:latihan1/auth/auth_page.dart';
+import 'package:latihan1/produk/list_product.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,6 +10,16 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
+    Future<void> logout() async {
+      await FirebaseAuth.instance.signOut();
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthPage()),
+        );
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -16,16 +27,9 @@ class HomePage extends StatelessWidget {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              if (context.mounted) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AuthPage()),
-                );
-              }
-            },
+            onPressed: logout,
             icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
           ),
         ],
       ),
@@ -76,6 +80,53 @@ class HomePage extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProductListScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.inventory_2),
+                  label: const Text(
+                    'Masuk ke Produk',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: OutlinedButton.icon(
+                  onPressed: logout,
+                  icon: const Icon(Icons.logout),
+                  label: const Text(
+                    'Logout',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    side: const BorderSide(color: Colors.red),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 ),
               ),
             ],

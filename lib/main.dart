@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:latihan1/auth/auth_page.dart';
 import 'package:latihan1/firebase_options.dart';
+import 'package:http_parser/http_parser.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
