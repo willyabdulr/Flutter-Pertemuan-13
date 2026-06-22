@@ -169,7 +169,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
               child: Center(
                 child: Text(
                   '${_products.length}',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -199,8 +202,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
             _fetchProducts();
           }
         },
-        child: const Icon(Icons.add),
         tooltip: 'Tambah Produk',
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -228,7 +231,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
             const SizedBox(height: 16),
             Text(
               'Terjadi Kesalahan',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red[700]),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.red[700],
+              ),
             ),
             const SizedBox(height: 8),
             Padding(
@@ -245,7 +252,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
               icon: const Icon(Icons.refresh),
               label: const Text('Coba Lagi'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
               ),
             ),
           ],
@@ -262,7 +272,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
             const SizedBox(height: 16),
             Text(
               'Belum Ada Produk',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey[600]),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600],
+              ),
             ),
             const SizedBox(height: 8),
             Text(
@@ -291,9 +305,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () async {
           final result = await Navigator.push(
@@ -350,7 +362,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: _getStockColor(product.stock).withOpacity(0.1),
+                            color: _getStockColor(
+                              product.stock,
+                            ).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Row(
@@ -389,7 +403,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AddProductScreen(product: product),
+                          builder: (context) =>
+                              AddProductScreen(product: product),
                         ),
                       );
                       if (result == true) {
@@ -422,7 +437,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
   Widget _buildProductImage(Product product) {
     // Cek apakah ada URL gambar
     if (product.imageUrl.isNotEmpty) {
-      final imageUrl = '${product.imageUrl}?v=${product.updatedAt.millisecondsSinceEpoch}';
+      final imageUrl =
+          '${product.imageUrl}?v=${product.updatedAt.millisecondsSinceEpoch}';
 
       return ClipRRect(
         borderRadius: BorderRadius.circular(8),
