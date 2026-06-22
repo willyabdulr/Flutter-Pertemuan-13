@@ -1,5 +1,6 @@
 // lib/screens/product_detail_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:latihan1/produk/add_product.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
@@ -304,67 +305,73 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     print('==================================');
 
     if (imageUrl.isNotEmpty) {
-      return Hero(
-        tag: 'product_image_${_product.id}',
-        child: SizedBox(
-          height: 300,
+      final productImage = SizedBox(
+        height: 300,
+        width: double.infinity,
+        child: Image.network(
+          imageUrl,
+          // URL storage tidak mengirim CORS header. Di Web, tampilkan melalui
+          // elemen <img> browser agar tetap dapat dimuat lintas origin.
+          webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+          fit: BoxFit.cover,
           width: double.infinity,
-          child: Image.network(
-            imageUrl,
-            webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: 300,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Container(
-                height: 300,
-                color: Colors.grey[200],
-                child: const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox(height: 8),
-                      Text('Memuat gambar...'),
-                    ],
-                  ),
-                ),
-              );
-            },
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                height: 300,
-                color: Colors.grey[200],
+          height: 300,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              height: 300,
+              color: Colors.grey[200],
+              child: const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.broken_image, size: 50, color: Colors.grey[400]),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Gagal memuat gambar',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Path: ${_product.image ?? 'null'}',
-                      style: TextStyle(fontSize: 10, color: Colors.grey[500]),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {});
-                      },
-                      child: const Text('Coba Lagi'),
-                    ),
+                    CircularProgressIndicator(),
+                    SizedBox(height: 8),
+                    Text('Memuat gambar...'),
                   ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            debugPrint('Gagal memuat gambar $imageUrl: $error');
+            return Container(
+              height: 300,
+              color: Colors.grey[200],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.broken_image, size: 50, color: Colors.grey[400]),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Gagal memuat gambar',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Path: ${_product.image ?? 'null'}',
+                    style: TextStyle(fontSize: 10, color: Colors.grey[500]),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {});
+                    },
+                    child: const Text('Coba Lagi'),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       );
+
+      // Platform view HTML tidak stabil ketika dipindahkan oleh animasi Hero.
+      // Hero tetap digunakan pada Android/iOS/Desktop.
+      if (kIsWeb) return productImage;
+
+      return Hero(tag: 'product_image_${_product.id}', child: productImage);
     } else {
       return Container(
         height: 300,

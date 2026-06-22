@@ -9,6 +9,7 @@ class Product {
   final int price;
   final int stock;
   final String? image;
+  final String? serverImageUrl;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -19,6 +20,7 @@ class Product {
     required this.price,
     required this.stock,
     this.image,
+    this.serverImageUrl,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -31,6 +33,7 @@ class Product {
       price: json['price'] ?? 0,
       stock: json['stock'] ?? 0,
       image: json['image'],
+      serverImageUrl: json['image_url']?.toString(),
       createdAt: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : DateTime.now(),
@@ -48,6 +51,7 @@ class Product {
       'price': price,
       'stock': stock,
       'image': image,
+      'image_url': serverImageUrl,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
@@ -55,13 +59,18 @@ class Product {
 
   //Getter untuk URL gambar
   String get imageUrl {
-    if (image == null || image!.isEmpty) return '';
+    if (serverImageUrl != null && serverImageUrl!.trim().isNotEmpty) {
+      return ApiService.getImageUrl(serverImageUrl);
+    }
+    if (image == null || image!.trim().isEmpty) return '';
     return ApiService.getImageUrl(image);
   }
 
   // Helper untuk format harga
-  String get formattedPrice => 'Rp ${price.toString()}'
-      .replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.');
+  String get formattedPrice => 'Rp ${price.toString()}'.replaceAllMapped(
+    RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+    (Match m) => '${m[1]}.',
+  );
 
   // Helper untuk status stok
   String get stockStatus => stock > 0 ? 'Tersedia: $stock' : 'Stok Habis';

@@ -444,6 +444,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
         borderRadius: BorderRadius.circular(8),
         child: Image.network(
           imageUrl,
+          webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
           width: 70,
           height: 70,
           fit: BoxFit.cover,
@@ -466,25 +467,28 @@ class _ProductListScreenState extends State<ProductListScreen> {
               ),
             );
           },
-          errorBuilder: (context, error, stackTrace) => Container(
-            width: 70,
-            height: 70,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.broken_image, size: 30, color: Colors.grey[400]),
-                const SizedBox(height: 4),
-                Text(
-                  'Error',
-                  style: TextStyle(fontSize: 10, color: Colors.grey[500]),
-                ),
-              ],
-            ),
-          ),
+          errorBuilder: (context, error, stackTrace) {
+            debugPrint('Gagal memuat gambar $imageUrl: $error');
+            return Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.broken_image, size: 30, color: Colors.grey[400]),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Error',
+                    style: TextStyle(fontSize: 10, color: Colors.grey[500]),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       );
     } else {
